@@ -25,7 +25,7 @@ const { pathToFileURL } = require('url');
 const shoeset = require('@eirslett/shoeset');
 const inflateRaw = promisify(zlib.inflateRaw);
 const execFileAsync = promisify(execFile);
-const APP_VERSION = '179';
+const APP_VERSION = '180';
 const APP_VERSION_URL =
   'https://sites.google.com/view/tungsten-ball/big-screen-launcher/app-version';
 const APP_DOWNLOAD_URL =
@@ -2268,6 +2268,32 @@ function register() {
       ).settings
     )
   );
+  ipcMain.handle('games:exportJson', async (e) => {
+    const win = BrowserWindow.fromWebContents(e.sender);
+    const result = await dialog.showSaveDialog(win, {
+      title: 'Export game library',
+      defaultPath: 'big-screen-library.json',
+      buttonLabel: 'Export JSON',
+      filters: [{ name: 'JSON file', extensions: ['json'] }]
+    });
+    if (result.canceled || !result.filePath) return { canceled: true };
+
+    const state = await readState();
+    const exportData = {
+      format: 'big-screen-launcher-library',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      games: state.games.map((game) => ({
+        title: game.title,
+        executablePath: game.executablePath || '',
+        artwork: game.artwork || null,
+        playtimeSeconds: Number(game.playtimeSeconds) || 0,
+        favorite: Boolean(game.favorite)
+      }))
+    };
+    await fs.writeFile(result.filePath, JSON.stringify(exportData, null, 2), 'utf8');
+    return { canceled: false, filePath: result.filePath, gameCount: exportData.games.length };
+  });
   ipcMain.handle('themes:import', async () => {
     const pick = await dialog.showOpenDialog({
       properties: ['openFile'],

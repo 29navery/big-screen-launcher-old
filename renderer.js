@@ -2097,7 +2097,7 @@ async function loadSystemStats(force = false) {
 }
 function renderSettings(v) {
   v.innerHTML =
-    '<div class="settings"><div class="panel"><h2>Scan folders</h2><div class="folders">' +
+    '<div class="settings"><div class="panel library-export-panel"><h2>Export library</h2><p>Save every game’s executable path, artwork references, playtime, and favorite status to a JSON file.</p><button data-focusable class="cmd primary library-export-button" id="exportLibrary">Export library as JSON</button></div><div class="panel"><h2>Scan folders</h2><div class="folders">' +
     (state.settings.scanFolders.length
       ? state.settings.scanFolders
           .map(
@@ -2173,6 +2173,15 @@ function renderSettings(v) {
     '</strong><span>Build</span><strong>Windows desktop package</strong><span>Downloads</span><strong>Server link</strong></div></div><div class="panel system-stats"><div class="panel-title-row"><h2>Computer stats</h2><button data-focusable class="cmd" id="refreshStats">Refresh</button></div>' +
     systemStatsHtml() +
     '</div></div>';
+  $('#exportLibrary').onclick = async () => {
+    try {
+      const result = await api.games.exportJson();
+      if (result.canceled) return;
+      setStatus('Exported ' + result.gameCount + ' games to ' + result.filePath);
+    } catch (e) {
+      setStatus('Could not export library: ' + e.message);
+    }
+  };
   $('#choose').onclick = async () => {
     state.settings.scanFolders = await api.folders.choose();
     render();

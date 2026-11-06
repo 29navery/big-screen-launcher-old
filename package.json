@@ -3,7 +3,7 @@
   "productName": "Big Screen Launcher",
   "description": "Better Steam!",
   "author": "nicky_lul",
-  "version": "1.7.9",
+  "version": "1.8.0",
   "main": "main.js",
   "scripts": {
     "start": "electron .",

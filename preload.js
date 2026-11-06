@@ -56,6 +56,7 @@ contextBridge.exposeInMainWorld('launcher', {
   },
   games: {
     list: () => invoke('games:list'),
+    exportJson: () => invoke('games:exportJson'),
     update: (id, u) => invoke('games:update', id, u),
     remove: (id) => invoke('games:remove', id),
     removeWithFiles: (id) => invoke('games:removeWithFiles', id),

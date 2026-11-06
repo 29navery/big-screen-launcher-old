@@ -20,6 +20,21 @@ button,
 input {
   font: inherit;
 }
+.library-export-panel {
+  padding: clamp(24px, 4vw, 38px);
+  border-color: color-mix(in srgb, var(--bsl-accent, #46c2ff), transparent 55%);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--bsl-accent, #46c2ff), transparent 88%), rgba(255, 255, 255, 0.07));
+}
+.library-export-panel p {
+  color: var(--bsl-muted, #9da9b8);
+  margin: 0 0 20px;
+}
+.library-export-button {
+  min-height: 68px;
+  min-width: min(100%, 360px);
+  padding: 0 28px;
+  font-size: 1.15rem;
+}
 button {
   border: 0;
   color: inherit;
